@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, session
-from .utils import dbConnection
+from .utils import dbConnection, login_required
 import sqlite3
 
 routes = Blueprint('routes', __name__)
@@ -71,11 +71,12 @@ def login():
 @routes.route('/logout')
 def logout():
     session.clear()
-    return redirect("/login")
+    return redirect("/")
 
 
 
 @routes.route("/feed")
+@login_required
 def feed():
     if "username" not in session:
         return redirect("/login")
@@ -84,6 +85,7 @@ def feed():
 
 
 @routes.route("/post")
+@login_required
 def post():
     if "username" not in session:
         return redirect("/login")
@@ -92,6 +94,7 @@ def post():
 
 
 @routes.route("/placements")
+@login_required
 def placements():
     if "username" not in session:
         return redirect("/login")
@@ -100,6 +103,7 @@ def placements():
 
 
 @routes.route("/profile")
+@login_required
 def profile():
     if "username" not in session:
         return redirect("/login")
