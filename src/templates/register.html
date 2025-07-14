@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusLoop | register</title>
+
+    <link rel="stylesheet" href="../static/styles/index.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>Register</h1>
+
+    <form action="/register" method="post">
+        <div>
+            <label for="roll">Roll Number</label>
+            <input name="roll" type="text" required>
+        </div>
+
+        <div>
+            <label for="username">Username</label>
+            <input name="username" type="text" required>
+        </div>
+
+        <div>
+            <label for="password">Password</label>
+            <input name="password" type="password" required>
+        </div>
+
+        <div>
+            <label for="name">Name</label>
+            <input name="name" type="text" required>
+        </div>
+
+        <div>
+            <label for="email">Email</label>
+            <input name="email" type="email" required>
+        </div>
+
+        <div>
+            <label for="phone">Phone number</label>
+            <input name="phone" type="number" required>
+        </div>
+
+        <div>
+            <label for="branch">Branch</label>
+            <select name="branch" required>
+                <option value="aero">Aeronautical Engineering</option>
+                <option value="cse">Computer Science and Engineering</option>
+                <option value="ds">Computer Science and Engineering (Data Science)</option>
+                <option value="aiml">Computer Science and Engineering (AI & ML)</option>
+                <option value="cs">Computer Science and Engineering (Cyber Security)</option>
+                <option value="it">Information Technology</option>
+                <option value="ece">Electronics and Communication Engineering</option>
+                <option value="eee">Electrical and Electronics Engineering</option>
+                <option value="mech">Mechanical Engineering</option>
+                <option value="civil">Civil Engineering</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="grad-year">Graduation Year</label>
+            <select name="grad-year" required>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+                <option value="2027">2027</option>
+                <option value="2028">2028</option>
+                <option value="2029">2029</option>
+            </select>
+        </div>
+
+        <input type="submit" value="register">
+    </form>
+</body>
+</html>
