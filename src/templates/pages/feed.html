@@ -2,6 +2,125 @@
 
 {% block main %}
 
-<h1>feed</h1>
+<header>
+    <h1>feed</h1>
+    <a href="/logout">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h6q.425 0 .713.288T12 4t-.288.713T11 5H5v14h6q.425 0 .713.288T12 20t-.288.713T11 21zm12.175-8H10q-.425 0-.712-.288T9 12t.288-.712T10 11h7.175L15.3 9.125q-.275-.275-.275-.675t.275-.7t.7-.313t.725.288L20.3 11.3q.3.3.3.7t-.3.7l-3.575 3.575q-.3.3-.712.288t-.713-.313q-.275-.3-.262-.712t.287-.688z" />
+        </svg>
+    </a>
+</header>
 
-{% endblock %}
+{% if posts %}
+<div class="feed-container">
+    {% for post in posts %}
+    <div class="post-card">
+        <div class="post-header">
+            <span class="post-username">{{'@' ~ post.username }}</span>
+            <a class="post-more" href="/post-id?q={{ post.id }}">&#x22EE;</a>
+        </div>
+
+        <div class="post-title">{{ post.title }}</div>
+
+        <div class="post-body">{{ post.body }}</div>
+
+        {% if post.tags %}
+        <div class="post-tags"><span style="color: rgb(218, 218, 218);">Tags:</span> {{ post.tags }}</div>
+        {% endif %}
+
+        <div class="post-actions">
+            <div class="action-btn" data-postid="{{ post.id }}" data-vote="up">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 4v16m0 0l-6-6m6 6l6-6"></path>
+                </svg>
+                <span class="count">{{ post.upvotes or 0 }}</span>
+            </div>
+            <div class="action-btn" data-postid="{{ post.id }}" data-vote="down">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 20V4m0 0l-6 6m6-6l6 6"></path>
+                </svg>
+                <span class="count">{{ post.downvotes or 0 }}</span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+    <p>No posts yet.</p>
+{% endif %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".action-btn").forEach(btn => {
+            const postId = btn.dataset.postid;
+            const type = btn.dataset.vote;
+            const storageKey = `voted-${type}-${postId}`;
+            const svg = btn.querySelector("svg");
+            const countSpan = btn.querySelector(".count");
+    
+            // Just highlight if already voted – do NOT change count
+            if (localStorage.getItem(storageKey)) {
+                btn.classList.add("voted");
+            }
+    
+            btn.addEventListener("click", async function () {
+                let count = parseInt(countSpan.textContent);
+                const isVoted = localStorage.getItem(storageKey);
+    
+                // Optional: Get opposite button if you want to allow only one vote
+                const opposite = type === "up" ? "down" : "up";
+                const oppositeKey = `voted-${opposite}-${postId}`;
+                const oppositeBtn = document.querySelector(`.action-btn[data-postid="${postId}"][data-vote="${opposite}"]`);
+                const oppositeCountSpan = oppositeBtn?.querySelector(".count");
+    
+                if (isVoted) {
+                    // User clicked again to remove vote
+                    countSpan.textContent = count - 1;
+                    localStorage.removeItem(storageKey);
+                    btn.classList.remove("voted");
+    
+                    await fetch("/vote", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ post_id: postId, vote_type: type, action: "remove" })
+                    });
+                } else {
+                    // Add vote
+                    countSpan.textContent = count + 1;
+                    localStorage.setItem(storageKey, true);
+                    btn.classList.add("voted");
+    
+                    // Optional: Remove opposite vote if it exists
+                    if (localStorage.getItem(oppositeKey)) {
+                        localStorage.removeItem(oppositeKey);
+                        if (oppositeBtn && oppositeCountSpan) {
+                            oppositeBtn.classList.remove("voted");
+                            oppositeCountSpan.textContent = parseInt(oppositeCountSpan.textContent) - 1;
+    
+                            await fetch("/vote", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ post_id: postId, vote_type: opposite, action: "remove" })
+                            });
+                        }
+                    }
+    
+                    // Animate
+                    svg.classList.add("bounce");
+                    setTimeout(() => svg.classList.remove("bounce"), 300);
+    
+                    await fetch("/vote", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ post_id: postId, vote_type: type, action: "add" })
+                    });
+                }
+            });
+        });
+    });
+</script>
+    
+    
+
+
+{% endblock %}    

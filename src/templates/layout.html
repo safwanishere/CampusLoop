@@ -11,14 +11,31 @@
 <body>
     {% block main %}{% endblock %}
 
-    <a href="/logout">logout</a>
     <nav>
-        <ul>
-            <li><a href="/post">post</a></li>
-            <li><a href="/feed">Feed</a></li>
-            <li><a href="/placements">placements</a></li>
-            <li><a href="/profile">profile</a></li>
-        </ul>
+        <a href="/feed" class="nav-element">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M20 10a1 1 0 1 0-2 0zM6 10a1 1 0 0 0-2 0zm14.293 2.707a1 1 0 0 0 1.414-1.414zM12 3l.707-.707a1 1 0 0 0-1.414 0zm-9.707 8.293a1 1 0 1 0 1.414 1.414zM7 22h10v-2H7zm13-3v-9h-2v9zM6 19v-9H4v9zm15.707-7.707l-9-9l-1.414 1.414l9 9zm-10.414-9l-9 9l1.414 1.414l9-9zM17 22a3 3 0 0 0 3-3h-2a1 1 0 0 1-1 1zM7 20a1 1 0 0 1-1-1H4a3 3 0 0 0 3 3z" />
+            </svg>
+            <p>feed</p>
+        </a>
+        <a href="/post" class="nav-element">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h7m7 0h-7m0 0V5m0 7v7" />
+            </svg>
+            <p>post</p>
+        </a>
+        <a href="/placements" class="nav-element">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M20 6c.58 0 1.05.2 1.42.59c.38.41.58.86.58 1.41v11c0 .55-.2 1-.58 1.41c-.37.39-.84.59-1.42.59H4c-.58 0-1.05-.2-1.42-.59C2.2 20 2 19.55 2 19V8c0-.55.2-1 .58-1.41C2.95 6.2 3.42 6 4 6h4V4c0-.58.2-1.05.58-1.42C8.95 2.2 9.42 2 10 2h4c.58 0 1.05.2 1.42.58c.38.37.58.84.58 1.42v2zM4 8v11h16V8zm10-2V4h-4v2z" />
+            </svg>
+            <p>placements</p>
+        </a>
+        <a href="/profile" class="nav-element">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M15.71 12.71a6 6 0 1 0-7.42 0a10 10 0 0 0-6.22 8.18a1 1 0 0 0 2 .22a8 8 0 0 1 15.9 0a1 1 0 0 0 1 .89h.11a1 1 0 0 0 .88-1.1a10 10 0 0 0-6.25-8.19M12 12a4 4 0 1 1 4-4a4 4 0 0 1-4 4" />
+            </svg>
+            <p>profile</p>
+        </a>
     </nav>
 </body>
 </html>
