@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, session, flash
 from .utils import dbConnection, login_required
+import google.generativeai as genai
+import os
 import sqlite3
 import jsonify
 
@@ -176,12 +178,61 @@ def post():
 
 
 
-@routes.route("/placements")
-@login_required
+@routes.route("/placements", methods=["GET", "POST"])
 def placements():
-    if "username" not in session:
-        return redirect("/login")
-    return render_template("pages/placements.html")
+    db = dbConnection()
+    cursor = db.cursor()
+
+    if request.method == "POST":
+        userid = session.get("roll")
+        company = request.form.get("company")
+        post = request.form.get("post")
+        ctc = request.form.get("ctc")
+        cgpa = request.form.get("cgpa")
+        linkedin = request.form.get("linkedin")
+        github = request.form.get("github")
+        matter = request.form.get("matter")
+
+        cursor.execute("""
+            INSERT INTO placements (userid, company, post, ctc, cgpa, linkedin, github, matter)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (userid, company, post, ctc, cgpa, linkedin, github, matter))
+        db.commit()
+
+    cursor.execute("SELECT * FROM placements ORDER BY id DESC")
+    rows = cursor.fetchall()
+
+    prompt = """
+    Here are placement experiences from students:
+
+    """
+
+    for r in rows:
+        prompt += f"- Company: {r[2]}, Role: {r[3]}, CTC: {r[4]}, CGPA: {r[5]}, Note: {r[8]}\n"
+
+    prompt += """
+
+    Based on these experiences, give the following in bullet points:
+    1. Common preparation strategies
+    2. Frequently hired CGPA ranges
+    3. Advice for juniors
+    4. Most mentioned companies or job roles
+
+    Keep it clear and concise in markdown or bullet format.
+    """
+
+
+    from dotenv import load_dotenv
+
+    load_dotenv()
+    API_KEY = os.getenv("GEMINI_API_KEY")
+    
+    genai.configure(api_key=API_KEY)
+    model = genai.GenerativeModel('gemini-2.0-flash')
+    gemini_response = model.generate_content(prompt)
+
+    return render_template("pages/placements.html", placements=rows, summary=gemini_response.text)
+
 
 
 

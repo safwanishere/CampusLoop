@@ -11,4 +11,40 @@
     </a>
 </header>
 
+{% if summary %}
+<div class="gemini-summary">
+    <h2>💡 Insights from Gemini AI</h2>
+    <p>{{ summary | replace('\n', '<br>') | safe }}</p>
+  </div>
+{% endif %}
+
+
+<div class="placements-container">
+    {% for p in placements %}
+    <div class="placement-card">
+        <h2>{{ p[3] }} @ {{ p[2] }}</h2>
+        <p><strong>CTC:</strong> {{ p[4] }}</p>
+        <p><strong>CGPA:</strong> {{ p[5] }}</p>
+        {% if p[6] %}<p><a href="{{ p[6] }}" target="_blank">LinkedIn</a></p>{% endif %}
+        {% if p[7] %}<p><a href="{{ p[7] }}" target="_blank">GitHub</a></p>{% endif %}
+        <p>{{ p[8] }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<h2 class="form-heading">Add Your Placement</h2>
+<form method="post" class="placement-form">
+    <div class="form-group">
+        <input name="company" type="text" placeholder="Company" required>
+        <input name="post" type="text" placeholder="Job Title" required>
+        <input name="ctc" type="text" placeholder="CTC (e.g., 12 LPA)" required>
+        <input name="cgpa" type="number" step="0.01" placeholder="CGPA" required>
+        <input name="linkedin" type="url" placeholder="LinkedIn (optional)">
+        <input name="github" type="url" placeholder="GitHub (optional)">
+        <textarea name="matter" placeholder="Anything you’d like to share..." required></textarea>
+    </div>
+    <input type="submit" value="Submit" class="button">
+</form>
+
+
 {% endblock %}
